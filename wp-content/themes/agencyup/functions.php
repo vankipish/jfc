@@ -224,7 +224,7 @@ function agencyup_hide_shop_page_title( $title ) {
 add_action("wp_ajax_nopriv_my_ajax_action", "k_ajax_my_ajax_action");// для админки
 function k_ajax_my_ajax_action(){ // функция которая вызывается
   if ($_POST['price']==123) {// проверяем, если цена равна 123
-    echo "цена равна 123"; // выводим результат в <div class="results"></div> 
+    echo "цена равна 123456"; // выводим результат в <div class="results"></div>
   }else {
     echo "цена не равна 123";// выводим результат в <div class="results"></div> 
   } 
