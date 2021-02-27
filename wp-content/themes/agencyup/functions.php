@@ -1,0 +1,252 @@
+<?php define( 'AGENCYUP_THEME_DIR', get_template_directory() . '/' );
+	define( 'AGENCYUP_THEME_URI', get_template_directory_uri() . '/' );
+	define( 'AGENCYUP_THEME_SETTINGS', 'agencyup-settings' );
+	
+	
+	$agencyup_theme_path = get_template_directory() . '/inc/ansar/';
+
+	require( $agencyup_theme_path . '/agencyup-custom-navwalker.php' );
+	require( $agencyup_theme_path . '/default_menu_walker.php' );
+	require( $agencyup_theme_path . '/font/font.php');
+	require( $agencyup_theme_path . '/customize/agencyup_plugin_recommend.php');
+	/*-----------------------------------------------------------------------------------*/
+	/*	Enqueue scripts and styles.
+	/*-----------------------------------------------------------------------------------*/
+	require( $agencyup_theme_path .'/enqueue.php');
+	/* ----------------------------------------------------------------------------------- */
+	/* Customizer */
+	/* ----------------------------------------------------------------------------------- */
+	
+	require( $agencyup_theme_path  . '/customize/agencyup_customize_general.php');
+	require( $agencyup_theme_path . '/customize/agencyup_customize_copyright.php');
+	require( $agencyup_theme_path  . '/customize/agencyup_customize_header.php');
+	require_once( trailingslashit( get_template_directory() ) . 'inc/ansar/customize-pro/class-customize.php' );
+	require_once( trailingslashit( get_template_directory() ) . 'inc/ansar/customize/agencyup_customize_partials.php' );
+	require_once get_template_directory() . '/inc/ansar/agencyup-admin-plugin-install.php';
+	
+if ( ! function_exists( 'agencyup_setup' ) ) :
+/**
+ * Sets up theme defaults and registers support for various WordPress features.
+ *
+ * Note that this function is hooked into the after_setup_theme hook, which
+ * runs before the init hook. The init hook is too late for some features, such
+ * as indicating support for post thumbnails.
+ */
+function agencyup_setup() {
+	/*
+	 * Make theme available for translation.
+	 * Translations can be filed in the /languages/ directory.
+	 * If you're building a theme based on agencyup, use a find and replace
+	 * to change 'agencyup' to the name of your theme in all the template files.
+	 */
+	load_theme_textdomain( 'agencyup', get_template_directory() . '/languages' );
+
+	// Add default posts and comments RSS feed links to head.
+	add_theme_support( 'automatic-feed-links' );
+
+	/*
+	 * Let WordPress manage the document title.
+	 * By adding theme support, we declare that this theme does not use a
+	 * hard-coded <title> tag in the document head, and expect WordPress to
+	 * provide it for us.
+	 */
+	add_theme_support( 'title-tag' );
+
+	/*
+	 * Enable support for Post Thumbnails on posts and pages.
+	 *
+	 * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
+	 */
+	add_theme_support( 'post-thumbnails' );
+
+	// This theme uses wp_nav_menu() in one location.
+	register_nav_menus( array(
+		'primary' => __( 'Primary menu', 'agencyup' ),
+	) );
+
+	/*
+	 * Switch default core markup for search form, comment form, and comments
+	 * to output valid HTML5.
+	 */
+	add_theme_support( 'html5', array(
+		'search-form',
+		'comment-form',
+		'comment-list',
+		'gallery',
+		'caption',
+	) );
+
+	// Set up the WordPress core custom background feature.
+	add_theme_support( 'custom-background', apply_filters( 'agencyup_custom_background_args', array(
+		'default-color' => 'ffffff',
+		'default-image' => '',
+	) ) );
+
+    // Set up the woocommerce feature.
+    add_theme_support( 'woocommerce');
+
+    // Woocommerce Gallery Support
+	add_theme_support( 'wc-product-gallery-zoom' );
+	add_theme_support( 'wc-product-gallery-lightbox' );
+	add_theme_support( 'wc-product-gallery-slider' );
+
+    // Added theme support for selective refresh for widgets.
+	add_theme_support( 'customize-selective-refresh-widgets' );
+
+	/* Add theme support for gutenberg block */
+	add_theme_support( 'align-wide' );
+
+	// Add support for responsive embedded content.
+	add_theme_support( 'responsive-embeds' );
+	
+	//Custom logo
+	
+	//Custom logo
+	add_theme_support(
+    'custom-logo',
+    array(
+        'unlink-homepage-logo' => true, // Add Here!
+    	)
+	);
+	
+	// custom header Support
+			$args = array(
+			'default-image'		=>  get_template_directory_uri() .'/images/sub-header.jpg',
+			'width'			=> '1600',
+			'height'		=> '600',
+			'flex-height'		=> false,
+			'flex-width'		=> false,
+			'header-text'		=> true,
+			'default-text-color'	=> '#143745',
+			 'wp-head-callback' => 'agencyup_header_color',
+		);
+		add_theme_support( 'custom-header', $args );
+	
+
+}
+endif;
+add_action( 'after_setup_theme', 'agencyup_setup' );
+
+
+	function agencyup_the_custom_logo() {
+	
+		if ( function_exists( 'the_custom_logo' ) ) {
+			the_custom_logo();
+		}
+
+	}
+
+	add_filter('get_custom_logo','agencyup_logo_class');
+
+
+	function agencyup_logo_class($html)
+	{
+	$html = str_replace('custom-logo-link', 'navbar-brand', $html);
+	return $html;
+	}
+
+/**
+ * Set the content width in pixels, based on the theme's design and stylesheet.
+ *
+ * Priority 0 to make it available to lower priority callbacks.
+ *
+ * @global int $content_width
+ */
+function agencyup_content_width() {
+	$GLOBALS['content_width'] = apply_filters( 'agencyup_content_width', 640 );
+}
+add_action( 'after_setup_theme', 'agencyup_content_width', 0 );
+
+/**
+ * Register widget area.
+ *
+ * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
+ */
+function agencyup_widgets_init() {
+	
+	$agencyup_footer_column_layout = get_theme_mod('agencyup_footer_column_layout',3);
+	
+	$agencyup_footer_column_layout = 12 / $agencyup_footer_column_layout;
+	
+	register_sidebar( array(
+		'name'          => esc_html__( 'Sidebar Widget Area', 'agencyup' ),
+		'id'            => 'sidebar-1',
+		'description'   => '',
+		'before_widget' => '<div id="%1$s" class="bs-widget %2$s">',
+		'after_widget'  => '</div>',
+		'before_title'  => '<h6>',
+		'after_title'   => '</h6>',
+	) );
+
+	register_sidebar( array(
+		'name'          => esc_html__( 'Footer Widget Area', 'agencyup' ),
+		'id'            => 'footer_widget_area',
+		'description'   => '',
+		'before_widget' => '<div id="%1$s" class="col-md-'.$agencyup_footer_column_layout.' col-sm-6 rotateInDownLeft animated bs-widget %2$s">',
+		'after_widget'  => '</div>',
+		'before_title'  => '<h6>',
+		'after_title'   => '</h6>',
+	) );
+
+}
+add_action( 'widgets_init', 'agencyup_widgets_init' );
+
+//Editor Styling 
+add_editor_style( array( 'css/editor-style.css') );
+
+if ( ! function_exists( 'wp_body_open' ) ) :
+	/**
+	 * Fire the wp_body_open action.
+	 *
+	 * Added for backwards compatibility to support pre 5.2.0 WordPress versions.
+	 *
+	 * @since Twenty Nineteen 1.4
+	 */
+	function wp_body_open() {
+		/**
+		 * Triggered after the opening <body> tag.
+		 *
+		 * @since Twenty Nineteen 1.4
+		 */
+		do_action( 'wp_body_open' );
+	}
+endif;
+
+add_filter( 'woocommerce_show_page_title', 'agencyup_hide_shop_page_title' );
+
+function agencyup_hide_shop_page_title( $title ) {
+    if ( is_shop() ) $title = false;
+    return $title;
+}
+
+// проверка на скидки
+ add_action("wp_ajax_my_ajax_action", "k_ajax_my_ajax_action");// для фронтенда 
+add_action("wp_ajax_nopriv_my_ajax_action", "k_ajax_my_ajax_action");// для админки
+function k_ajax_my_ajax_action(){ // функция которая вызывается
+  if ($_POST['price']==123) {// проверяем, если цена равна 123
+    echo "цена равна 123"; // выводим результат в <div class="results"></div> 
+  }else {
+    echo "цена не равна 123";// выводим результат в <div class="results"></div> 
+  } 
+  wp_die();
+ }
+
+ function menu_panel_grafik_rabot() {
+// меню для раздела - График работы
+add_menu_page('График работы', 'График работы', 'manage_options', 'grafik-rabot.php', 'grafik_rabot','dashicons-phone', 1);
+// меню для раздела - Цены
+add_menu_page('Цены', 'Цены', 'manage_options', 'ceni.php', 'ceni','dashicons-store', 3);
+ 
+// Страница раздела - График работы
+function grafik_rabot() {
+// тут уже будет находиться содержимое страницы
+echo "<h2>График работы</h2><hr><p>Изменить график работы</p><hr>";
+}
+ 
+// Страница раздела - Цены
+function ceni() {
+// тут уже будет находиться содержимое страницы
+echo "<h2>Цены</h2><hr><p>Изменить цены</p><hr>";
+}
+}
+add_action('admin_menu', 'menu_panel_grafik_rabot');

@@ -1,0 +1,38 @@
+.sliderbox h1, .servicebox h2, .servicebox h3, .sliderbox p,
+.sliderbox .block-editor-rich-text__editable.wp-block-button__link,
+.service-col .block-editor-rich-text__editable.wp-block-button__link,
+.servicebox p.block-editor-rich-text__editable.block-editor-block-list__block.wp-block{
+  font-family: 'Ubuntu', sans-serif !important;
+}
+.sliderbox h1{
+	font-size: 35px !important;
+	letter-spacing: 1px !important;
+}
+.sliderbox .block-editor-block-list__block,.servicebox .block-editor-block-list__block{
+  margin-top: 10px !important;
+  margin-bottom: 10px !important
+}
+.sliderbox .block-editor-rich-text__editable.wp-block-button__link{
+	padding: 13px 25px !important;
+  font-size: 14px;
+  color: #fff;
+  border: 2px solid;
+  border-radius: 25px;
+  background: transparent;
+}
+.sliderbox .block-editor-rich-text__editable.wp-block-button__link:hover{
+  background: #fff;
+  color: #002857 !important;
+  border-color: #fff !important;
+}
+.service-col .block-editor-rich-text__editable.wp-block-button__link{
+	background: transparent !important;
+  border: 2px solid #002857;
+  padding: 5px 15px !important;
+  color:#002857 !important;
+  font-size: 12px;
+}
+.servicebox h2{
+	letter-spacing: 2px !important;
+	font-weight: 600 !important;
+}
